@@ -17,8 +17,6 @@ export default function RootLayout({
 }) {
   const [isDark, set__isDark] = useState<boolean>(false);
 
-  // console.log(typeof is_dark);
-  // console.log(is_dark);
   useEffect(() => {
     const is_dark = JSON.parse(localStorage.getItem('theme')!);
     set__isDark(is_dark);
