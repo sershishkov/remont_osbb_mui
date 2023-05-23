@@ -1,5 +1,5 @@
 import { NextRequest } from 'next/server';
-import User from '@/mongoModels/user/Model__User';
+import Model__User from '@/mongoModels/user/Model__User';
 import { connectToDB } from '@/mongoConnect/connectToDatabase';
 
 export const POST = async (request: NextRequest) => {
@@ -14,7 +14,7 @@ export const POST = async (request: NextRequest) => {
 
   try {
     await connectToDB();
-    const user = await User.findOne({ email }).select('+password');
+    const user = await Model__User.findOne({ email }).select('+password');
 
     if (user && (await user.matchPassword(password))) {
       const token = user.getSignedJwtToken();

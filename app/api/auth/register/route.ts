@@ -1,5 +1,5 @@
 import { NextRequest } from 'next/server';
-import User from '@/mongoModels/user/Model__User';
+import Model__User from '@/mongoModels/user/Model__User';
 import { connectToDB } from '@/mongoConnect/connectToDatabase';
 
 export const POST = async (request: NextRequest) => {
@@ -15,7 +15,7 @@ export const POST = async (request: NextRequest) => {
   try {
     await connectToDB();
     //Check if user exists
-    const user__Exists = await User.findOne({ email });
+    const user__Exists = await Model__User.findOne({ email });
     if (user__Exists) {
       return new Response(
         JSON.stringify({ success: false, message: 'User already exists' }),
@@ -24,7 +24,7 @@ export const POST = async (request: NextRequest) => {
     }
 
     //Create user
-    const user = await User.create({
+    const user = await Model__User.create({
       name,
       email,
       password,
@@ -47,10 +47,21 @@ export const POST = async (request: NextRequest) => {
         );
       }
 
+      const maxAge = 30 * 24 * 60 * 60 * 1000; // 30 days
+
+      const expires = new Date(Date.now() + maxAge).toUTCString();
+
+      const cookieHeaderValue = `${token}|${expires}; HttpOnly; Max-Age=${maxAge}; SameSite=Strict; secure=${
+        process.env.NODE_ENV === 'production'
+      }`;
+
       return new Response(
-        JSON.stringify({ success: true, message: 'Authorized', token }),
+        JSON.stringify({ success: true, message: 'Authorized' }),
         {
           status: 201,
+          headers: {
+            'Set-Cookie': cookieHeaderValue,
+          },
         }
       );
     }
