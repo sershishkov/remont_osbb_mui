@@ -1,4 +1,6 @@
+'use client';
+import CircularProgress from '@mui/material/CircularProgress';
+
 export default function Loading() {
-  // Or a custom loading skeleton component
-  return 'Loading...';
+  return <CircularProgress />;
 }

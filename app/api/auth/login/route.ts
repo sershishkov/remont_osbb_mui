@@ -1,4 +1,5 @@
 import { NextRequest } from 'next/server';
+import cookie from 'cookie';
 import Model__User from '@/mongoModels/user/Model__User';
 import { connectToDB } from '@/mongoConnect/connectToDatabase';
 
@@ -28,15 +29,34 @@ export const POST = async (request: NextRequest) => {
         );
       }
 
+      const maxAge = 30 * 24 * 60 * 60 * 1000; // 30 days
+
+      const expires = new Date(Date.now() + maxAge);
+
+      const serialised = cookie.serialize('myJWT', token, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV !== 'development',
+        sameSite: 'strict',
+        maxAge,
+        path: '/',
+        expires,
+      });
+
       return new Response(
-        JSON.stringify({ success: true, message: 'Authorized', token }),
+        JSON.stringify({ success: true, message: 'Authorized' }),
         {
           status: 201,
+          headers: {
+            'Set-Cookie': serialised,
+          },
         }
       );
     } else {
       return new Response(
-        JSON.stringify({ success: false, message: 'Invalid user data' }),
+        JSON.stringify({
+          success: false,
+          message: 'You have not registered yet',
+        }),
         { status: 400 }
       );
     }

@@ -1,5 +1,7 @@
 'use client';
 import React, { useState, useEffect } from 'react';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import '../styles/globals.css';
 import { ThemeProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -36,6 +38,17 @@ export default function RootLayout({
             <Grid item>
               <Footer />
             </Grid>
+            <ToastContainer
+              autoClose={1000}
+              // position='top-left'
+              // hideProgressBar={false}
+              // newestOnTop={false}
+              // closeOnClick
+              // rtl={false}
+              // pauseOnFocusLoss
+              // draggable
+              // pauseOnHover
+            />
           </Grid>
         </ThemeProvider>
       </body>
