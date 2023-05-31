@@ -19,6 +19,7 @@ export const GET = async (request: NextRequest) => {
       sameSite: 'strict',
       maxAge: -1,
       path: '/',
+      expires: new Date(0),
     });
 
     return new Response(
